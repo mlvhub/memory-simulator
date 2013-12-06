@@ -7,6 +7,7 @@ import java.util.List;
 import simulator.entity.SimulatorFile;
 import simulator.gui.SimulatorGUI;
 import simulator.io.FileIO;
+import simulator.util.Generator;
 
 public class Main {
 
@@ -19,13 +20,16 @@ public class Main {
 		
 		File file = new File("/home/mlopez/Desktop/helloworld.txt");
 		List<Character> chars = FileIO.readCharacters(file);
-		SimulatorFile simFile = new SimulatorFile(file, chars, 5000);
+		// Clase que va a contener datos necesarios para simular
+		SimulatorFile simFile = new SimulatorFile(Generator.nextId(), file, chars, 5000);
 		
 		Paginator paginator = new Paginator(MEMORY_AMOUNT, FRAME_SIZE);
 		paginator.requestMemory(simFile);
 		
-		 SimulatorGUI view = new SimulatorGUI();
-		 view.setVisible(true);
+		System.out.println(Generator.nextId());
+		
+		 /*SimulatorGUI view = new SimulatorGUI();
+		 view.setVisible(true);*/
 	}
 	
 
