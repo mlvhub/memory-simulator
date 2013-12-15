@@ -44,6 +44,11 @@ public class Paginator {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public void stop() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 }

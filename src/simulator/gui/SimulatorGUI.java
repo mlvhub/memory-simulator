@@ -41,9 +41,12 @@ public class SimulatorGUI extends JFrame {
 	private Paginator paginator;
 	
 	private JTable memoryCells;
+	
+	private JPanel pane;
 
 	private JButton openFile;
 	private JButton startSimulator;
+	private JButton stopSimulator;
 
 	private List<SimulatorFile> loadedFiles = new ArrayList<SimulatorFile>();
 	private JList loadedFilesList;
@@ -51,7 +54,6 @@ public class SimulatorGUI extends JFrame {
 
 	private JTextField memoryAmountField;
 	private JTextField frameSizeField;
-	private JTextField lastName;
 	
 	private Frame[][] testFrames = new Frame[20][20];
 
@@ -88,7 +90,7 @@ public class SimulatorGUI extends JFrame {
 		
 		
 
-		JPanel pane = new JPanel(new BorderLayout());
+		pane = new JPanel(new BorderLayout());
 		numberOfRows = 3;
 		numberOfColumns = 2;
 		pane.setLayout(new GridLayout(numberOfRows, numberOfColumns));
@@ -116,6 +118,9 @@ public class SimulatorGUI extends JFrame {
 		startSimulator = new JButton("Simular");
 		startSimulator.addActionListener(new StartPaginator());
 		pane.add(startSimulator);
+		
+		stopSimulator = new JButton("Detener");
+		stopSimulator.addActionListener(new StopPaginator());
 
 		// add the pane to the main window
 		getContentPane().add(container);
@@ -144,6 +149,8 @@ public class SimulatorGUI extends JFrame {
 	}
 	
 	class MemoryTableModel extends AbstractTableModel {
+
+		private static final long serialVersionUID = 1L;
 		
 		private Frame[][] frames;
 		
@@ -217,10 +224,26 @@ public class SimulatorGUI extends JFrame {
 	private class StartPaginator implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			openFile.setEnabled(false);
+			pane.remove(startSimulator);
+			pane.add(stopSimulator);
+			pane.updateUI();
+			
 			int memoryAmount = getIntFromField(memoryAmountField);
 			int frameAmount = getIntFromField(frameSizeField);
 			paginator = new Paginator(memoryAmount, frameAmount);
 			paginator.run();
+		}
+
+	}
+	
+	private class StopPaginator implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			openFile.setEnabled(true);
+			pane.remove(stopSimulator);
+			pane.add(startSimulator);
+			pane.updateUI();
+			
+			paginator.stop();
 		}
 
 	}
