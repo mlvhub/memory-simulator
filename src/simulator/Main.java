@@ -13,23 +13,8 @@ public class Main {
 
 
 	public static void main(String[] args) {
-		
-		//Tiene que ser configurable
-		int MEMORY_AMOUNT = 40;
-		int FRAME_SIZE = 2;
-		
-		File file = new File("/home/mlopez/Desktop/helloworld.txt");
-		List<Character> chars = FileIO.readCharacters(file);
-		// Clase que va a contener datos necesarios para simular
-		SimulatorFile simFile = new SimulatorFile(Generator.nextId(), file, chars, 5000);
-		
-		Paginator paginator = new Paginator(MEMORY_AMOUNT, FRAME_SIZE);
-		paginator.requestMemory(simFile);
-		
-		System.out.println(Generator.nextId());
-		
-		 /*SimulatorGUI view = new SimulatorGUI();
-		 view.setVisible(true);*/
+		 SimulatorGUI gui = new SimulatorGUI();
+		 gui.setVisible(true);
 	}
 	
 

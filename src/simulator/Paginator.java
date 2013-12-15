@@ -39,6 +39,11 @@ public class Paginator {
 	private boolean isMemoryFull() {
 		return freeMemory == 0 || freeMemory < frameSize;
 	}
+
+	public void run() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 }

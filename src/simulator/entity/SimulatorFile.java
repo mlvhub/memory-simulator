@@ -3,6 +3,8 @@ package simulator.entity;
 import java.io.File;
 import java.util.List;
 
+import simulator.util.AbstractGenerator;
+
 public class SimulatorFile {
 
 	private int id;
@@ -11,9 +13,11 @@ public class SimulatorFile {
 	// lifespan en milisegundos
 	private int size;
 	private int lifespan;
+	private AbstractGenerator generator;
 
-	public SimulatorFile(int id, File file, List<Character> chars) {
-		this.id = id;
+	public SimulatorFile(AbstractGenerator generator, File file, List<Character> chars) {
+		this.generator = generator;
+		this.id = generator.nextId();
 		this.file = file;
 		this.chars = chars;
 		// Es para siempre
@@ -21,12 +25,18 @@ public class SimulatorFile {
 		this.size = chars.size();
 	}
 	
-	public SimulatorFile(int id, File file, List<Character> chars, int lifespan) {
-		this.id = id;
+	public SimulatorFile(AbstractGenerator generator, File file, List<Character> chars, int lifespan) {
+		this.generator = generator;
+		this.id = generator.nextId();
 		this.file = file;
 		this.chars = chars;
+		// Es para siempre
 		this.lifespan = lifespan;
 		this.size = chars.size();
+	}
+	
+	public String getName() {
+		return this.file.getName();
 	}
 	
 	public int getId() {
