@@ -73,12 +73,16 @@ public class Paginator {
 			// Agarro una coordenada de un marco libre
 			Point freeFrameCoord = getFreeFrameCoordinate();
 			// Asigno
-			// frames[freeFrameCoord.x][freeFrameCoord.y] =
+			assignPage(page, freeFrameCoord);
 			// Lo borro porque ya está ocupado
 			freeFramesCoordinates.remove(freeFrameCoord);
 			filesInMemory.add(file);
 			freeMemory -= file.getSize();
 		}
+	}
+	
+	private void assignPage(Page page, Point coord) {
+		frames[coord.x][coord.y].setPage(page);
 	}
 
 	private boolean isMemoryFull() {
