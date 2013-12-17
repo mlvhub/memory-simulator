@@ -88,7 +88,7 @@ public class Paginator {
 	}
 
 	public void run() {
-		paginar();
+		paginate();
 	}
 
 	public void stop() {
@@ -101,15 +101,15 @@ public class Paginator {
 			Generator genPerFile = new Generator();
 			Page page = new Page(genPerFile);
 				
+			int counter = 1;
 			for (Character ch : sf.getChars()) {
-				for (int i = 0; i < pageSize; i++) {
-					if (i < pageSize)
-						page.getCharacters().add(ch);
-					else {
-						pagesPerFile.add(page);
-						page = new Page(genPerFile);
-						i = 0;
-					}
+				if(counter == pageSize) { 
+					counter = 0;
+					pagesPerFile.add(page);
+					page = new Page(genPerFile);
+				} else {
+					page.getCharacters().add(ch);
+					counter++;
 				}
 			}
 			
