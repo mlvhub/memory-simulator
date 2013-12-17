@@ -1,7 +1,6 @@
 package simulator;
 
 import java.awt.Point;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,7 +11,7 @@ import simulator.entity.Frame;
 import simulator.entity.Page;
 import simulator.entity.SimulatorFile;
 import simulator.io.FileIO;
-import simulator.util.AbstractGenerator;
+import simulator.util.Generator;
 
 public class Paginator {
 	private int memoryAmount;
@@ -66,12 +65,13 @@ public class Paginator {
 		return initFrames;
 	}
 
-	public void requestMemory(SimulatorFile file) {
+	public void requestMemory(SimulatorFile file, List<Page> pages) {
 		if (isMemoryFull()) {
 			filesWaiting.add(file);
 		} else {
 			// Asigno
-			loadPage(page);
+			for(Page page: pages)
+				loadPage(page);
 			filesInMemory.add(file);
 			freeMemory -= file.getSize();
 		}
@@ -94,6 +94,14 @@ public class Paginator {
 	public void stop() {
 		// TODO
 	}
+	
+	public void paginate() {
+		for (SimulatorFile sf: filesToPaginate) {
+			List<Page> pagesPerFile = new ArrayList<Page>();
+			Generator genPerFile = new Generator();
+			requestMemory(sf, pagesPerFile);
+ 		}
+	}
 
 	public void paginar() {
 		int counter = 0;
@@ -111,6 +119,7 @@ public class Paginator {
 				}
 			}
 			counter = 0;
+			
 		}
 	}
 
