@@ -102,17 +102,18 @@ public class Paginator {
 			Page page = new Page(genPerFile);
 				
 			int counter = 1;
-			for (Character ch : sf.getChars()) {
-				if(counter == pageSize) { 
-					counter = 0;
+			for(int i = 0; i < sf.getChars().size(); i++) {
+				Character ch = sf.getChars().get(i);
+				if (counter % pageSize == 0) { 
 					pagesPerFile.add(page);
 					page = new Page(genPerFile);
+				} else if (counter == sf.getChars().size()) {
+					pagesPerFile.add(page);
 				} else {
 					page.getCharacters().add(ch);
 					counter++;
 				}
 			}
-			
 			requestMemory(sf, pagesPerFile);
  		}
 	}
