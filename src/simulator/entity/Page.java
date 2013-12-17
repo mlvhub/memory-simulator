@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Page {
 	private int fileId;
-	private int pageId;
+	private int pageNumber;
 	private Character character;
 	private ArrayList<Character>listperpage = new ArrayList<Character>(getSize());
 	
