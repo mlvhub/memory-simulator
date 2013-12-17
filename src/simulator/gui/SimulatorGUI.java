@@ -212,7 +212,6 @@ public class SimulatorGUI extends JFrame {
 				else
 					sendErrorMessage("¡El archivo ya está cargado!");
 			}
-
 		}
 	}
 	
@@ -230,7 +229,7 @@ public class SimulatorGUI extends JFrame {
 			
 			int memoryAmount = getIntFromField(memoryAmountField);
 			int frameAmount = getIntFromField(frameSizeField);
-			paginator = new Paginator(memoryAmount, frameAmount);
+			paginator = new Paginator(memoryAmount, frameAmount, loadedFiles);
 			paginator.run();
 		}
 

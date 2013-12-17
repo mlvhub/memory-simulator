@@ -18,6 +18,7 @@ import simulator.util.Generator;
 public class Paginator {
 	private int memoryAmount;
 	private int frameSize;
+	private int frameQuantity;
 	private int pageSize;
 	private ArrayList<Frame> frame = new ArrayList<Frame>();
 	private Page page = new Page();
@@ -26,12 +27,15 @@ public class Paginator {
 	private List<SimulatorFile> filesInMemory = new ArrayList<SimulatorFile>();
 	
 	private int freeMemory;
+	private List<SimulatorFile> filesToPaginate;
 	
-	public Paginator(int memoryAmount, int frameSize) {
+	public Paginator(int memoryAmount, int frameSize, List<SimulatorFile> filesToPaginate) {
 		this.memoryAmount = memoryAmount;
 		this.freeMemory = memoryAmount;
 		this.frameSize = frameSize;
 		this.pageSize = frameSize;
+		this.filesToPaginate = filesToPaginate;
+		this.frameQuantity = memoryAmount / frameSize; 
 	}
 
 	public void requestMemory(SimulatorFile file) {
