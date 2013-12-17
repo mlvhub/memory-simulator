@@ -1,19 +1,18 @@
 package simulator;
 
+import java.awt.Point;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
+import java.util.Random;
 
 import simulator.entity.Frame;
 import simulator.entity.Page;
 import simulator.entity.SimulatorFile;
 import simulator.io.FileIO;
 import simulator.util.AbstractGenerator;
-import simulator.util.Generator;
 
 public class Paginator {
 	private int memoryAmount;
@@ -24,6 +23,7 @@ public class Paginator {
 	private Page page = new Page();
 	private FileIO fileIO = new FileIO();
 	private Frame[][] frames;
+	private List<Point> freeFramesCoordinates;
 	private Queue<SimulatorFile> filesWaiting = new LinkedList<SimulatorFile>();
 	private List<SimulatorFile> filesInMemory = new ArrayList<SimulatorFile>();
 	
@@ -36,14 +36,44 @@ public class Paginator {
 		this.frameSize = frameSize;
 		this.pageSize = frameSize;
 		this.filesToPaginate = filesToPaginate;
-		this.frameQuantity = memoryAmount / frameSize; 
+		this.frameQuantity = (int) Math.ceil( memoryAmount / (double)frameSize ); 
+		this.frames = createBidimensionalArray(frameQuantity);
+		this.freeFramesCoordinates = calculateFreeFramesCoordinates(frames);
+	}
+	
+	private List<Point> calculateFreeFramesCoordinates(Frame[][] frames) {
+		List<Point> freeFramesCoordinates = new ArrayList<Point>();
+		for(int x = 0; x < frames.length; x++)
+			for(int y = 0; y < frames[0].length; y++)
+				if (frames[x][y].isFree())
+					freeFramesCoordinates.add(new Point(x, y));
+		return freeFramesCoordinates;
+	}
+	public Point getFreeFrameCoordinate() {
+		int index = new Random().nextInt(freeFramesCoordinates.size());
+		return freeFramesCoordinates.get(index);
+	}
+
+	public Frame[][] createBidimensionalArray(int quantity) {
+		int cols = 60;
+		int rows = (int) Math.ceil( quantity / (double)cols );
+		Frame[][] initFrames = new Frame[cols][rows];
+		for(int i = 0; i < cols; i++)
+			for(int j = 0; j < rows; j++) 
+					initFrames[i][j] = new Frame();
+		return initFrames;
 	}
 
 	public void requestMemory(SimulatorFile file) {
 		if(isMemoryFull()) {
 			filesWaiting.add(file);
 		} else {
-			// Ver como representamos asignación de recursos
+			// Agarro una coordenada de un marco libre
+			Point freeFrameCoord = getFreeFrameCoordinate();
+			// Asigno
+			//frames[freeFrameCoord.x][freeFrameCoord.y] = 
+			// Lo borro porque ya está ocupado
+			freeFramesCoordinates.remove(freeFrameCoord);
 			filesInMemory.add(file);
 			freeMemory -= file.getSize();
 		}
@@ -55,12 +85,10 @@ public class Paginator {
 
 	public void run() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	public void stop() {
 		// TODO Auto-generated method stub
-		
 	}
 	
 	public void paginar(File file){
@@ -83,6 +111,10 @@ public class Paginator {
 			}
 		}
 		}
+
+	public Frame[][] getFrames() {
+		return frames;
+	}
 	
 	
 }

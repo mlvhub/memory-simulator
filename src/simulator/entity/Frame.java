@@ -13,12 +13,10 @@ public class Frame {
 	}
 	
 	public boolean isUsed() {
-		//System.out.println(!isFree());
 		return !isFree();
 	}
 	
 	public boolean isFree() {
-		System.out.println(page);
 		return page == null;
 	}
 

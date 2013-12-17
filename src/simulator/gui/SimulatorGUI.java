@@ -43,6 +43,8 @@ public class SimulatorGUI extends JFrame {
 	private JTable memoryCells;
 	
 	private JPanel pane;
+	private JPanel simulatedMemoryContainer;
+	private JPanel container;
 
 	private JButton openFile;
 	private JButton startSimulator;
@@ -54,41 +56,17 @@ public class SimulatorGUI extends JFrame {
 
 	private JTextField memoryAmountField;
 	private JTextField frameSizeField;
-	
-	private Frame[][] testFrames = new Frame[20][20];
 
 	public SimulatorGUI() {
 
 		setTitle(SIMULATOR_TITLE);
 
-		JPanel container = new JPanel(new BorderLayout());
+		container = new JPanel(new BorderLayout());
 		int numberOfRows = 1;
 		int numberOfColumns = 3;
 		container.setLayout(new GridLayout(numberOfRows, numberOfColumns));
 
-		JPanel simulatedMemoryContainer = new JPanel(new BorderLayout());
-		
-		// Test Frames
-		for(int i = 0; i < testFrames.length; i++)
-			for (int j = 0; j < testFrames.length; j++)
-				if(new Random().nextBoolean())
-					testFrames[i][j] = new Frame();
-				else
-					testFrames[i][j] = new Frame(new Page());
-		
-		memoryCells = new JTable(new MemoryTableModel(testFrames));
-		
-		TableColumn column = null;
-		for (int i = 0; i < memoryCells.getColumnModel().getColumnCount(); i++) {
-		    column = memoryCells.getColumnModel().getColumn(i);
-		    column.setPreferredWidth(20);
-		}
-		
-		memoryCells.setDefaultRenderer(Frame.class, new CustomRenderer());
-		simulatedMemoryContainer.add(memoryCells);
-		container.add(simulatedMemoryContainer);
-		
-		
+		simulatedMemoryContainer = new JPanel(new BorderLayout());
 
 		pane = new JPanel(new BorderLayout());
 		numberOfRows = 3;
@@ -130,6 +108,22 @@ public class SimulatorGUI extends JFrame {
 		pack();
 	}
 	
+	private void initTable(Frame[][] frames) {
+		
+		memoryCells = new JTable(new MemoryTableModel(frames));
+		
+		TableColumn column = null;
+		for (int i = 0; i < memoryCells.getColumnModel().getColumnCount(); i++) {
+		    column = memoryCells.getColumnModel().getColumn(i);
+		    column.setPreferredWidth(5);
+		}
+		
+		memoryCells.setDefaultRenderer(Frame.class, new CustomRenderer());
+		simulatedMemoryContainer.add(memoryCells);
+		container.add(simulatedMemoryContainer);
+//		pack();
+	}
+	
 	private void loadFile(File file) {
 		System.out.println(file.getName());
 		List<Character> chars = FileIO.readCharacters(file);
@@ -163,7 +157,7 @@ public class SimulatorGUI extends JFrame {
 	    }
 
 	    public int getRowCount() {
-	        return frames.length;
+	        return frames[0].length;
 	    }
 
 	    public Object getValueAt(int row, int col) {
@@ -171,16 +165,16 @@ public class SimulatorGUI extends JFrame {
 	    }
 
 	    public Class getColumnClass(int c) {
-	        return frames[0][c].getClass();
+	        return frames[c][0].getClass();
 	    }
 	    
 	    public void setValueAt(Frame frame, int row, int col) {
-	        frames[row][col] = frame;
+	        frames[col][row] = frame;
 	        fireTableCellUpdated(row, col);
 	    }
 	    
 	    public boolean isUsed(int row, int col) {
-	    	return frames[row][col].isUsed();
+	    	return frames[col][row].isUsed();
 	    }
 	}
 	
@@ -231,6 +225,7 @@ public class SimulatorGUI extends JFrame {
 			int frameAmount = getIntFromField(frameSizeField);
 			paginator = new Paginator(memoryAmount, frameAmount, loadedFiles);
 			paginator.run();
+			initTable(paginator.getFrames());
 		}
 
 	}
