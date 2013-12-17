@@ -23,6 +23,7 @@ public class Paginator {
 	private ArrayList<Frame> frame = new ArrayList<Frame>();
 	private Page page = new Page();
 	private FileIO fileIO = new FileIO();
+	private Frame[][] frames;
 	private Queue<SimulatorFile> filesWaiting = new LinkedList<SimulatorFile>();
 	private List<SimulatorFile> filesInMemory = new ArrayList<SimulatorFile>();
 	
