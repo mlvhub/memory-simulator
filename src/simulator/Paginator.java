@@ -100,18 +100,21 @@ public class Paginator {
 			List<Page> pagesPerFile = new ArrayList<Page>();
 			Generator genPerFile = new Generator();
 			Page page = new Page(genPerFile);
-				
-			int counter = 1;
-			for(int i = 0; i < sf.getChars().size(); i++) {
-				Character ch = sf.getChars().get(i);
-				if (counter % pageSize == 0) { 
+			
+			int i = 0;
+			int counter = 0;
+			while(i < sf.getChars().size()) {
+				if (counter == 4) {
+					counter = 0;
 					pagesPerFile.add(page);
 					page = new Page(genPerFile);
-				} else if (counter == sf.getChars().size()) {
+				} else if (i + 1 == sf.getChars().size()) {
 					pagesPerFile.add(page);
+					i++;
 				} else {
-					page.getCharacters().add(ch);
+					page.getCharacters().add(sf.getChars().get(i));
 					counter++;
+					i++;
 				}
 			}
 			requestMemory(sf, pagesPerFile);
