@@ -13,10 +13,8 @@ public class SimulatorFile {
 	// lifespan en milisegundos
 	private int size;
 	private int lifespan;
-	private AbstractGenerator generator;
 
 	public SimulatorFile(AbstractGenerator generator, File file, List<Character> chars) {
-		this.generator = generator;
 		this.id = generator.nextId();
 		this.file = file;
 		this.chars = chars;
@@ -26,7 +24,6 @@ public class SimulatorFile {
 	}
 	
 	public SimulatorFile(AbstractGenerator generator, File file, List<Character> chars, int lifespan) {
-		this.generator = generator;
 		this.id = generator.nextId();
 		this.file = file;
 		this.chars = chars;

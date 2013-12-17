@@ -21,7 +21,7 @@ public class Test {
 //		System.out.println(gen1.nextId());
 //		System.out.println(gen2.nextId());
 		
-		System.out.println(Math.ceil(5/3.0));
+		System.out.println(2%4);
 	}
 
 }

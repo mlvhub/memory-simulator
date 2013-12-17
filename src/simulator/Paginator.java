@@ -20,7 +20,6 @@ public class Paginator {
 	private int pageSize;
 	private ArrayList<Frame> frame = new ArrayList<Frame>();
 	private ArrayList<Page> pageList = new ArrayList<Page>();
-	private Page page = new Page();
 	private FileIO fileIO = new FileIO();
 	private Frame[][] frames;
 	private List<Point> freeFramesCoordinates;
@@ -100,21 +99,36 @@ public class Paginator {
 		for (SimulatorFile sf: filesToPaginate) {
 			List<Page> pagesPerFile = new ArrayList<Page>();
 			Generator genPerFile = new Generator();
+			Page page = new Page(genPerFile);
+				
+			for (Character ch : sf.getChars()) {
+				for (int i = 0; i < pageSize; i++) {
+					if (i < pageSize)
+						page.getCharacters().add(ch);
+					else {
+						pagesPerFile.add(page);
+						page = new Page(genPerFile);
+						i = 0;
+					}
+				}
+			}
+			
 			requestMemory(sf, pagesPerFile);
  		}
 	}
 
+	/*
 	public void paginar() {
 		int counter = 0;
 		for (SimulatorFile sf : filesToPaginate) {
 			for (Character ch : sf.getChars()) {
 				for (int i = 0; i < pageSize; i++) {
 					if (i < pageSize)
-						page.getListperpage().add(ch);
+						page.getCharacters().add(ch);
 					else {
-						page.setPageNumber(counter);
+						//page.setPageNumber(counter);
 						pageList.add(page);
-						page = new Page();
+						page = new Page(new Generator());
 						i = 0;
 						counter++;
 					}
@@ -123,7 +137,7 @@ public class Paginator {
 			counter = 0;
 			
 		}
-	}
+	} */
 
 	public Frame[][] getFrames() {
 		return frames;

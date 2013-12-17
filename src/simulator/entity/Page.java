@@ -2,11 +2,16 @@ package simulator.entity;
 
 import java.util.ArrayList;
 
+import simulator.util.AbstractGenerator;
+
 public class Page {
+	private int pageId;
 	private int fileId;
-	private int pageNumber;
-	private Character character;
-	private ArrayList<Character>listperpage = new ArrayList<Character>(getSize());
+	private ArrayList<Character> characters = new ArrayList<Character>(getSize());
+	
+	public Page(AbstractGenerator generator) {
+		this.pageId = generator.nextId();
+	}
 	
 	private int size;
 	
@@ -16,12 +21,6 @@ public class Page {
 	public void setFileId(int fileId) {
 		this.fileId = fileId;
 	}
-	public Character getCharacter() {
-		return character;
-	}
-	public void setCharacter(Character character) {
-		this.character = character;
-	}
 	public int getSize() {
 		return size;
 	}
@@ -29,17 +28,17 @@ public class Page {
 		this.size = size;
 	}
 	
-	public ArrayList<Character> getListperpage() {
-		return listperpage;
+	public ArrayList<Character> getCharacters() {
+		return characters;
 	}
-	public void setListperpage(ArrayList<Character> listperpage) {
-		this.listperpage = listperpage;
+	public void setCharacters(ArrayList<Character> characters) {
+		this.characters = characters;
 	}
-	public int getPageNumber() {
-		return pageNumber;
+	public int getPageId() {
+		return pageId;
 	}
-	public void setPageNumber(int pageNumber) {
-		this.pageNumber = pageNumber;
+	public void setPageId(int pageId) {
+		this.pageId = pageId;
 	}
 	
 	
