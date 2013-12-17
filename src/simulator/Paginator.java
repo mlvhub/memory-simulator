@@ -64,6 +64,7 @@ public class Paginator {
 	}
 	
 	public void paginar() {
+		int counter=0;
 		ArrayList<Character> cha = new ArrayList<Character>();
 		for (SimulatorFile sf : filesToPaginate) {
 			cha.addAll(sf.getChars());
@@ -72,14 +73,15 @@ public class Paginator {
 					if (i < pageSize)
 						page.getListperpage().add(ch);
 					else {
-						Page page = new Page();
+						page.setPageNumber(counter);
+						page = new Page();
 						i = 0;
-
+						counter++;
 					}
 
 				}
 			}
-		}
+			counter =0;		}
 	}
 	
 	
