@@ -55,7 +55,7 @@ public class Paginator {
 
 	public void run() {
 		// TODO Auto-generated method stub
-		
+		paginar();
 	}
 
 	public void stop() {
@@ -63,26 +63,24 @@ public class Paginator {
 		
 	}
 	
-	public void paginar(File file){
-		AbstractGenerator generator = null;
-		ArrayList<Character>total = new ArrayList<Character>();
-		while(fileIO.readCharacters(file) != null){
-		total.addAll(fileIO.readCharacters(file));
-	}
-		for(Character cha : total){
-			for(int i=0; i<pageSize; i++){
-				if(i<pageSize)
-					page.getListperpage().add(cha);
-				else{
-					Page page = new Page();
-					i=0;
-					generator.nextId();
+	public void paginar() {
+		ArrayList<Character> cha = new ArrayList<Character>();
+		for (SimulatorFile sf : filesToPaginate) {
+			cha.addAll(sf.getChars());
+			for (Character ch : cha) {
+				for (int i = 0; i < pageSize; i++) {
+					if (i < pageSize)
+						page.getListperpage().add(ch);
+					else {
+						Page page = new Page();
+						i = 0;
+
+					}
+
 				}
-				SimulatorFile sim = new SimulatorFile(generator, file, page.getListperpage());
-				requestMemory(sim);
 			}
 		}
-		}
+	}
 	
 	
 }
