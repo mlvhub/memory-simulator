@@ -56,7 +56,7 @@ public class Paginator {
 	}
 
 	public Frame[][] createBidimensionalArray(int quantity) {
-		int cols = 60;
+		int cols = 10;
 		int rows = (int) Math.ceil(quantity / (double) cols);
 		Frame[][] initFrames = new Frame[cols][rows];
 		for (int i = 0; i < cols; i++)
@@ -66,6 +66,8 @@ public class Paginator {
 	}
 
 	public void requestMemory(SimulatorFile file, List<Page> pages) {
+		log(file);
+		log(pages);
 		if (isMemoryFull()) {
 			filesWaiting.add(file);
 		} else {
@@ -77,6 +79,25 @@ public class Paginator {
 		}
 	}
 	
+	private void log(SimulatorFile file) {
+		StringBuffer msg = new StringBuffer("Tengo un archivo con: ");
+		for (Character ch: file.getChars()) {
+			msg.append(ch+", ");
+		}
+		System.out.println(msg.toString()+"\n");
+	}
+
+	private void log(List<Page> pages) {
+		StringBuffer msg = new StringBuffer();
+		for(Page page: pages) {
+			msg.append("Tengo una pagina con: ");
+			for (Character ch: page.getCharacters())
+				msg.append(ch+", ");
+			msg.append("\n");
+		}
+		System.out.println(msg.toString());
+	}
+
 	private void loadPage(Page page) {
 		Point freeFrameCoord = getFreeFrameCoordinate();
 		frames[freeFrameCoord.x][freeFrameCoord.y].setPage(page);
@@ -104,11 +125,12 @@ public class Paginator {
 			int i = 0;
 			int counter = 0;
 			while(i < sf.getChars().size()) {
-				if (counter == 4) {
+				if (counter == pageSize) {
 					counter = 0;
 					pagesPerFile.add(page);
 					page = new Page(genPerFile);
 				} else if (i + 1 == sf.getChars().size()) {
+					page.getCharacters().add(sf.getChars().get(i));
 					pagesPerFile.add(page);
 					i++;
 				} else {
@@ -120,28 +142,6 @@ public class Paginator {
 			requestMemory(sf, pagesPerFile);
  		}
 	}
-
-	/*
-	public void paginar() {
-		int counter = 0;
-		for (SimulatorFile sf : filesToPaginate) {
-			for (Character ch : sf.getChars()) {
-				for (int i = 0; i < pageSize; i++) {
-					if (i < pageSize)
-						page.getCharacters().add(ch);
-					else {
-						//page.setPageNumber(counter);
-						pageList.add(page);
-						page = new Page(new Generator());
-						i = 0;
-						counter++;
-					}
-				}
-			}
-			counter = 0;
-			
-		}
-	} */
 
 	public Frame[][] getFrames() {
 		return frames;

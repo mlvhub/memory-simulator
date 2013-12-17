@@ -121,7 +121,7 @@ public class SimulatorGUI extends JFrame {
 		memoryCells.setDefaultRenderer(Frame.class, new CustomRenderer());
 		simulatedMemoryContainer.add(memoryCells);
 		container.add(simulatedMemoryContainer);
-//		pack();
+		pack();
 	}
 	
 	private void loadFile(File file) {
