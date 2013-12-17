@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Page {
 	private int fileId;
+	private int pageNumber;
 	private Character character;
 	private ArrayList<Character>listperpage = new ArrayList<Character>(getSize());
 	
@@ -33,6 +34,12 @@ public class Page {
 	}
 	public void setListperpage(ArrayList<Character> listperpage) {
 		this.listperpage = listperpage;
+	}
+	public int getPageNumber() {
+		return pageNumber;
+	}
+	public void setPageNumber(int pageNumber) {
+		this.pageNumber = pageNumber;
 	}
 	
 	
