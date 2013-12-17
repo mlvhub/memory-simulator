@@ -8,12 +8,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
+import simulator.entity.Frame;
+import simulator.entity.Page;
 import simulator.entity.SimulatorFile;
+import simulator.io.FileIO;
+import simulator.util.AbstractGenerator;
+import simulator.util.Generator;
 
 public class Paginator {
 	private int memoryAmount;
 	private int frameSize;
 	private int pageSize;
+	private ArrayList<Frame> frame = new ArrayList<Frame>();
+	private Page page = new Page();
+	private FileIO fileIO = new FileIO();
 	private Queue<SimulatorFile> filesWaiting = new LinkedList<SimulatorFile>();
 	private List<SimulatorFile> filesInMemory = new ArrayList<SimulatorFile>();
 	
@@ -49,6 +57,27 @@ public class Paginator {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public void paginar(File file){
+		AbstractGenerator generator = null;
+		ArrayList<Character>total = new ArrayList<Character>();
+		while(fileIO.readCharacters(file) != null){
+		total.addAll(fileIO.readCharacters(file));
+	}
+		for(Character cha : total){
+			for(int i=0; i<pageSize; i++){
+				if(i<pageSize)
+					page.getListperpage().add(cha);
+				else{
+					Page page = new Page();
+					i=0;
+					generator.nextId();
+				}
+				SimulatorFile sim = new SimulatorFile(generator, file, page.getListperpage());
+				requestMemory(sim);
+			}
+		}
+		}
 	
 	
 }
