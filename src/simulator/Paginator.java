@@ -20,6 +20,7 @@ public class Paginator {
 	private int frameQuantity;
 	private int pageSize;
 	private ArrayList<Frame> frame = new ArrayList<Frame>();
+	private ArrayList<Page> pageList = new ArrayList<Page>();
 	private Page page = new Page();
 	private FileIO fileIO = new FileIO();
 	private Frame[][] frames;
@@ -104,6 +105,7 @@ public class Paginator {
 						page.getListperpage().add(ch);
 					else {
 						page.setPageNumber(counter);
+						pageList.add(page);
 						page = new Page();
 						i = 0;
 						counter++;
