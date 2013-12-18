@@ -63,6 +63,9 @@ public class SimulatorGUI extends JFrame {
 
 	private JTextField memoryAmountField;
 	private JTextField frameSizeField;
+	private JTextField sleepField;
+
+	private SwingWorker worker;
 
 	public SimulatorGUI() {
 
@@ -76,7 +79,7 @@ public class SimulatorGUI extends JFrame {
 		simulatedMemoryContainer = new JPanel(new BorderLayout());
 
 		pane = new JPanel(new BorderLayout());
-		numberOfRows = 4;
+		numberOfRows = 5;
 		numberOfColumns = 2;
 		pane.setLayout(new GridLayout(numberOfRows, numberOfColumns));
 		container.add(pane);
@@ -95,8 +98,16 @@ public class SimulatorGUI extends JFrame {
 		pane.add(frameSizelabel);
 		frameSizeField = new JTextField();
 		pane.add(frameSizeField);
-		
-		
+
+		JLabel sleeplabel = new JLabel(" Tiempo entre cada página (ms): ");
+		pane.add(sleeplabel);
+		sleepField = new JTextField();
+		pane.add(sleepField);
+
+		JLabel freeMemoryLabel = new JLabel("Memoria libre:");
+		pane.add(freeMemoryLabel);
+		freeMemory = new JLabel("");
+		pane.add(freeMemory);
 
 		openFile = new JButton("Cargar Archivo");
 		openFile.addActionListener(new OpenFile());
@@ -108,13 +119,9 @@ public class SimulatorGUI extends JFrame {
 
 		stopSimulator = new JButton("Detener");
 		stopSimulator.addActionListener(new StopPaginator());
-		
-		freeMemory = new JLabel("");
-		pane.add(freeMemory);
 
 		// add the pane to the main window
 		getContentPane().add(container);
-		
 
 		// Pack will make the size of window fitting to the compoents
 		// You could also use for example setSize(300, 400);
@@ -233,37 +240,47 @@ public class SimulatorGUI extends JFrame {
 
 	private class StartPaginator implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			openFile.setEnabled(false);
-			pane.remove(startSimulator);
-			pane.add(stopSimulator);
-			pane.updateUI();
-			int memoryAmount = getIntFromField(memoryAmountField);
-			int frameAmount = getIntFromField(frameSizeField);
-			// TODO Agarrar de un field
-			final int sleep = 1000;
-			paginator = new Paginator(memoryAmount, frameAmount, loadedFiles);
-			initTable(paginator.getFrames());
-			
-			final SwingWorker worker = new SwingWorker() {
+			if (loadedFiles.size() > 0) {
+				openFile.setEnabled(false);
+				pane.remove(startSimulator);
+				pane.add(stopSimulator);
+				pane.updateUI();
 
-				@Override
-				protected Object doInBackground() throws Exception {
-					for(SimulatorFile file: loadedFiles) {
-						List<Page> pagesPerFile = paginator.paginate(file);
-						for (Page page : pagesPerFile) {
-							paginator.loadPage(page);
-							freeMemory.setText( "Memoria libre "+paginator.getFreeMemory()+" bytes");
-							initTable(paginator.getFrames());
-							Thread.sleep(sleep);
+				int memoryAmount = getIntFromField(memoryAmountField);
+				int frameAmount = getIntFromField(frameSizeField);
+				final int sleep = getIntFromField(sleepField);
+				paginator = new Paginator(memoryAmount, frameAmount,
+						loadedFiles);
+				initTable(paginator.getFrames());
+
+				worker = new SwingWorker() {
+
+					@Override
+					protected Object doInBackground() throws Exception {
+						System.out.println("doInBackground");
+						System.out.println(loadedFiles.size());
+						for (SimulatorFile file : loadedFiles) {
+							List<Page> pagesPerFile = paginator.paginate(file);
+							System.out.println(pagesPerFile.size());
+							for (Page page : pagesPerFile) {
+								paginator.loadPage(page);
+								freeMemory.setText(String.valueOf(paginator
+										.getFreeMemory()));
+								initTable(paginator.getFrames());
+								System.out.println(paginator.getFreeMemory());
+								Thread.sleep(sleep);
+							}
 						}
+						return null;
 					}
-					return null;
-				}
-			};
-			worker.execute();
-			
+				};
+				worker.execute();
+				System.out.println("executed");
+			} else {
+				sendErrorMessage("Debe cargar al menos un archivo.");
+			}
 		}
-		
+
 	}
 
 	private class StopPaginator implements ActionListener {
@@ -274,12 +291,16 @@ public class SimulatorGUI extends JFrame {
 			pane.updateUI();
 
 			paginator.stop();
+			if (!worker.isDone())
+				worker.cancel(true);
+
+			for (SimulatorFile file : loadedFiles)
+				file.renew();
 		}
 
 	}
 
 	private int getIntFromField(JTextField field) {
-		// TODO Ver si manejamos valores invalidos
 		return Integer.parseInt(field.getText());
 	}
 }

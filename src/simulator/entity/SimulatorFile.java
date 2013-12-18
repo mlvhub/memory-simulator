@@ -38,6 +38,10 @@ public class SimulatorFile {
 		this.size = chars.size();
 	}
 	
+	public void renew() {
+		this.charsToExtract = new LinkedList<Character>(chars);
+	}
+	
 	public List<Character> extractChars(int quantityToExtract) {
 		List<Character> chars = new ArrayList<Character>();
 		int i = 0;
