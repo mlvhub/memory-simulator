@@ -1,15 +1,19 @@
 package simulator;
 
 import java.awt.Point;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 
+import javax.swing.SwingWorker;
+
 import simulator.entity.Frame;
 import simulator.entity.Page;
 import simulator.entity.SimulatorFile;
+import simulator.gui.SimulatorGUI;
 import simulator.io.FileIO;
 import simulator.util.Generator;
 
@@ -66,42 +70,40 @@ public class Paginator {
 	}
 
 	public void requestMemory(SimulatorFile file, List<Page> pages) {
-		log(file);
-		log(pages);
 		if (isMemoryFull()) {
 			filesWaiting.add(file);
 		} else {
 			// Asigno
-			for(Page page: pages)
+			for (Page page : pages)
 				loadPage(page);
 			filesInMemory.add(file);
-			freeMemory -= file.getSize();
 		}
 	}
-	
+
 	private void log(SimulatorFile file) {
 		StringBuffer msg = new StringBuffer("Tengo un archivo con: ");
-		for (Character ch: file.getChars()) {
-			msg.append(ch+", ");
+		for (Character ch : file.getChars()) {
+			msg.append(ch + ", ");
 		}
-		System.out.println(msg.toString()+"\n");
+		System.out.println(msg.toString() + "\n");
 	}
 
 	private void log(List<Page> pages) {
 		StringBuffer msg = new StringBuffer();
-		for(Page page: pages) {
+		for (Page page : pages) {
 			msg.append("Tengo una pagina con: ");
-			for (Character ch: page.getCharacters())
-				msg.append(ch+", ");
+			for (Character ch : page.getCharacters())
+				msg.append(ch + ", ");
 			msg.append("\n");
 		}
 		System.out.println(msg.toString());
 	}
 
-	private void loadPage(Page page) {
+	public void loadPage(Page page) {
 		Point freeFrameCoord = getFreeFrameCoordinate();
 		frames[freeFrameCoord.x][freeFrameCoord.y].setPage(page);
 		freeFramesCoordinates.remove(freeFrameCoord);
+		freeMemory -= page.getCurrentSize();
 	}
 
 	private boolean isMemoryFull() {
@@ -109,38 +111,26 @@ public class Paginator {
 	}
 
 	public void run() {
-		paginate();
+		for (SimulatorFile file : filesToPaginate){
+			List<Page> pagesPerFile = paginate(file);
+			requestMemory(file, pagesPerFile);
+		}
 	}
 
 	public void stop() {
 		// TODO
 	}
-	
-	public void paginate() {
-		for (SimulatorFile sf: filesToPaginate) {
-			List<Page> pagesPerFile = new ArrayList<Page>();
-			Generator genPerFile = new Generator();
-			Page page = new Page(genPerFile);
-			
-			int i = 0;
-			int counter = 0;
-			while(i < sf.getChars().size()) {
-				if (counter == pageSize) {
-					counter = 0;
-					pagesPerFile.add(page);
-					page = new Page(genPerFile);
-				} else if (i + 1 == sf.getChars().size()) {
-					page.getCharacters().add(sf.getChars().get(i));
-					pagesPerFile.add(page);
-					i++;
-				} else {
-					page.getCharacters().add(sf.getChars().get(i));
-					counter++;
-					i++;
-				}
-			}
-			requestMemory(sf, pagesPerFile);
- 		}
+
+	public List<Page> paginate(SimulatorFile file) {
+		List<Page> pagesPerFile = new ArrayList<Page>();
+		Generator genPerFile = new Generator();
+		
+		while(file.hasCharsToExtract()) {
+			List<Character> extractedChars = file.extractChars(frameSize);
+			Page page = new Page(genPerFile, file.getId(), frameSize, extractedChars);
+			pagesPerFile.add(page);
+		}
+		return pagesPerFile;
 	}
 
 	public Frame[][] getFrames() {

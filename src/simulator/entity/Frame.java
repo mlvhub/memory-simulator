@@ -35,6 +35,10 @@ public class Frame {
 	public void setSize(int size) {
 		this.size = size;
 	}
+
+	public String getFileId() {
+		return (page != null) ?  String.valueOf(page.getFileId()) : "";
+	}
 	
 	
 }

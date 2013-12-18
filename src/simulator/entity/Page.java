@@ -1,19 +1,24 @@
 package simulator.entity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import simulator.util.AbstractGenerator;
 
 public class Page {
 	private int pageId;
 	private int fileId;
-	private ArrayList<Character> characters = new ArrayList<Character>(getSize());
-	
-	public Page(AbstractGenerator generator) {
-		this.pageId = generator.nextId();
-	}
-	
 	private int size;
+	private int currentSize;
+	private List<Character> characters = new ArrayList<Character>(getSize());
+	
+	public Page(AbstractGenerator generator, int fileId, int size, List<Character> chars) {
+		this.pageId = generator.nextId();
+		this.fileId = fileId;
+		this.size = size;
+		this.characters = chars;
+		this.currentSize = chars.size();
+	}
 	
 	public int getFileId() {
 		return fileId;
@@ -28,10 +33,10 @@ public class Page {
 		this.size = size;
 	}
 	
-	public ArrayList<Character> getCharacters() {
+	public List<Character> getCharacters() {
 		return characters;
 	}
-	public void setCharacters(ArrayList<Character> characters) {
+	public void setCharacters(List<Character> characters) {
 		this.characters = characters;
 	}
 	public int getPageId() {
@@ -39,6 +44,14 @@ public class Page {
 	}
 	public void setPageId(int pageId) {
 		this.pageId = pageId;
+	}
+
+	public int getCurrentSize() {
+		return currentSize;
+	}
+
+	public void setCurrentSize(int currentSize) {
+		this.currentSize = currentSize;
 	}
 	
 	
