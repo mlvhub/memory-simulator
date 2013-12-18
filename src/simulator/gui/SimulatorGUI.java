@@ -26,6 +26,8 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import org.omg.CORBA.FREE_MEM;
+
 import simulator.Paginator;
 import simulator.entity.Frame;
 import simulator.entity.Page;
@@ -53,6 +55,7 @@ public class SimulatorGUI extends JFrame {
 	private JButton openFile;
 	private JButton startSimulator;
 	private JButton stopSimulator;
+	private JLabel freeMemory;
 
 	private List<SimulatorFile> loadedFiles = new ArrayList<SimulatorFile>();
 	private JList loadedFilesList;
@@ -73,7 +76,7 @@ public class SimulatorGUI extends JFrame {
 		simulatedMemoryContainer = new JPanel(new BorderLayout());
 
 		pane = new JPanel(new BorderLayout());
-		numberOfRows = 3;
+		numberOfRows = 4;
 		numberOfColumns = 2;
 		pane.setLayout(new GridLayout(numberOfRows, numberOfColumns));
 		container.add(pane);
@@ -92,6 +95,8 @@ public class SimulatorGUI extends JFrame {
 		pane.add(frameSizelabel);
 		frameSizeField = new JTextField();
 		pane.add(frameSizeField);
+		
+		
 
 		openFile = new JButton("Cargar Archivo");
 		openFile.addActionListener(new OpenFile());
@@ -103,9 +108,13 @@ public class SimulatorGUI extends JFrame {
 
 		stopSimulator = new JButton("Detener");
 		stopSimulator.addActionListener(new StopPaginator());
+		
+		freeMemory = new JLabel("");
+		pane.add(freeMemory);
 
 		// add the pane to the main window
 		getContentPane().add(container);
+		
 
 		// Pack will make the size of window fitting to the compoents
 		// You could also use for example setSize(300, 400);
@@ -243,6 +252,7 @@ public class SimulatorGUI extends JFrame {
 						List<Page> pagesPerFile = paginator.paginate(file);
 						for (Page page : pagesPerFile) {
 							paginator.loadPage(page);
+							freeMemory.setText( "Memoria libre "+paginator.getFreeMemory()+" bytes");
 							initTable(paginator.getFrames());
 							Thread.sleep(sleep);
 						}
@@ -251,9 +261,9 @@ public class SimulatorGUI extends JFrame {
 				}
 			};
 			worker.execute();
-			JOptionPane.showMessageDialog(getContentPane(), "Memoria libre "+paginator.getFreeMemory()+" bytes");
+			
 		}
-
+		
 	}
 
 	private class StopPaginator implements ActionListener {
