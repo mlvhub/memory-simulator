@@ -75,7 +75,7 @@ public class Paginator {
 			for(Page page: pages)
 				loadPage(page);
 			filesInMemory.add(file);
-			freeMemory -= file.getSize();
+			setFreeMemory(getFreeMemory()-file.getSize());
 		}
 	}
 	
@@ -143,8 +143,27 @@ public class Paginator {
  		}
 	}
 
+	
 	public Frame[][] getFrames() {
 		return frames;
 	}
+
+	public List<Point> getFreeFramesCoordinates() {
+		return freeFramesCoordinates;
+	}
+
+	public void setFreeFramesCoordinates(List<Point> freeFramesCoordinates) {
+		this.freeFramesCoordinates = freeFramesCoordinates;
+	}
+
+	public int getFreeMemory() {
+		return freeMemory;
+	}
+
+	public void setFreeMemory(int freeMemory) {
+		this.freeMemory = freeMemory;
+	}
+	
+	
 
 }

@@ -226,6 +226,7 @@ public class SimulatorGUI extends JFrame {
 			paginator = new Paginator(memoryAmount, frameAmount, loadedFiles);
 			paginator.run();
 			initTable(paginator.getFrames());
+			JOptionPane.showMessageDialog(getContentPane(), "Memoria libre "+paginator.getFreeMemory()+" bytes");
 		}
 
 	}
