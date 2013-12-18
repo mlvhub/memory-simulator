@@ -1,15 +1,29 @@
 package simulator.entity;
 
+import simulator.util.AbstractGenerator;
+
 public class Frame {
+	private int frameId;
 	private Page page = null;
 	private int size;
+	private int currentSize;
 	
-	public Frame() {
+	public Frame(AbstractGenerator generator, int size) {
+		this.frameId = generator.nextId();
+		this.size = size;
+		this.currentSize = size;
 		
 	}
 	
-	public Frame(Page page) {
+	public Frame(AbstractGenerator generator, int size, Page page) {
+		this.frameId = generator.nextId();
 		this.page = page;
+		this.size = size;
+		this.currentSize = page.getCurrentSize();
+	}
+	
+	public String getInfo() {
+		return (page != null) ?  "F"+page.getFileId()+"-P"+page.getPageId() : "";
 	}
 	
 	public boolean isUsed() {
@@ -36,8 +50,12 @@ public class Frame {
 		this.size = size;
 	}
 
-	public String getFileId() {
-		return (page != null) ?  String.valueOf(page.getFileId()) : "";
+	public int getCurrentSize() {
+		return currentSize;
+	}
+
+	public void setCurrentSize(int currentSize) {
+		this.currentSize = currentSize;
 	}
 	
 	

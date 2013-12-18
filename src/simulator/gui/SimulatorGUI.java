@@ -55,7 +55,6 @@ public class SimulatorGUI extends JFrame {
 	private JButton openFile;
 	private JButton startSimulator;
 	private JButton stopSimulator;
-	private JLabel freeMemory;
 
 	private List<SimulatorFile> loadedFiles = new ArrayList<SimulatorFile>();
 	private JList loadedFilesList;
@@ -64,6 +63,9 @@ public class SimulatorGUI extends JFrame {
 	private JTextField memoryAmountField;
 	private JTextField frameSizeField;
 	private JTextField sleepField;
+	
+	private JLabel freeMemory;
+	private JLabel internalFragmentation;
 
 	private SwingWorker worker;
 
@@ -79,7 +81,7 @@ public class SimulatorGUI extends JFrame {
 		simulatedMemoryContainer = new JPanel(new BorderLayout());
 
 		pane = new JPanel(new BorderLayout());
-		numberOfRows = 5;
+		numberOfRows = 6;
 		numberOfColumns = 2;
 		pane.setLayout(new GridLayout(numberOfRows, numberOfColumns));
 		container.add(pane);
@@ -108,6 +110,12 @@ public class SimulatorGUI extends JFrame {
 		pane.add(freeMemoryLabel);
 		freeMemory = new JLabel("");
 		pane.add(freeMemory);
+		
+		JLabel internalFragmentationLabel = new JLabel("Fragmentación interna:");
+		pane.add(internalFragmentationLabel);
+		internalFragmentation = new JLabel("");
+		pane.add(internalFragmentation);
+		
 
 		openFile = new JButton("Cargar Archivo");
 		openFile.addActionListener(new OpenFile());
@@ -135,7 +143,7 @@ public class SimulatorGUI extends JFrame {
 		TableColumn column = null;
 		for (int i = 0; i < memoryCells.getColumnModel().getColumnCount(); i++) {
 			column = memoryCells.getColumnModel().getColumn(i);
-			column.setPreferredWidth(5);
+			column.setPreferredWidth(10);
 		}
 
 		memoryCells.setDefaultRenderer(Frame.class, new CustomRenderer());
@@ -183,7 +191,7 @@ public class SimulatorGUI extends JFrame {
 		}
 
 		public Object getValueAt(int row, int col) {
-			return frames[col][row].getFileId();
+			return frames[col][row].getInfo();
 		}
 
 		public Class getColumnClass(int c) {
@@ -266,6 +274,7 @@ public class SimulatorGUI extends JFrame {
 								paginator.loadPage(page);
 								freeMemory.setText(String.valueOf(paginator
 										.getFreeMemory()));
+								internalFragmentation.setText( String.valueOf(paginator.getInternalFragmentation()) );
 								initTable(paginator.getFrames());
 								System.out.println(paginator.getFreeMemory());
 								Thread.sleep(sleep);

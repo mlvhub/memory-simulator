@@ -1,20 +1,16 @@
 package simulator;
 
 import java.awt.Point;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 
-import javax.swing.SwingWorker;
-
 import simulator.entity.Frame;
 import simulator.entity.Page;
 import simulator.entity.SimulatorFile;
-import simulator.gui.SimulatorGUI;
-import simulator.io.FileIO;
+import simulator.util.AbstractGenerator;
 import simulator.util.Generator;
 
 public class Paginator {
@@ -22,9 +18,7 @@ public class Paginator {
 	private int frameSize;
 	private int frameQuantity;
 	private int pageSize;
-	private ArrayList<Frame> frame = new ArrayList<Frame>();
-	private ArrayList<Page> pageList = new ArrayList<Page>();
-	private FileIO fileIO = new FileIO();
+	private int internalFragmentation;
 	private Frame[][] frames;
 	private List<Point> freeFramesCoordinates;
 	private Queue<SimulatorFile> filesWaiting = new LinkedList<SimulatorFile>();
@@ -60,12 +54,13 @@ public class Paginator {
 	}
 
 	public Frame[][] createBidimensionalArray(int quantity) {
+		AbstractGenerator generator = new Generator();
 		int cols = 10;
 		int rows = (int) Math.ceil(quantity / (double) cols);
 		Frame[][] initFrames = new Frame[cols][rows];
 		for (int i = 0; i < cols; i++)
 			for (int j = 0; j < rows; j++)
-				initFrames[i][j] = new Frame();
+				initFrames[i][j] = new Frame(generator, frameSize);
 		return initFrames;
 	}
 
@@ -105,6 +100,7 @@ public class Paginator {
 		frames[freeFrameCoord.x][freeFrameCoord.y].setPage(page);
 		freeFramesCoordinates.remove(freeFrameCoord);
 		setFreeMemory(getFreeMemory()-page.getCurrentSize());
+		internalFragmentation += page.getInternalFragmentation();
 	}
 
 	private boolean isMemoryFull() {
@@ -120,6 +116,10 @@ public class Paginator {
 
 	public void stop() {
 		// TODO
+	}
+	
+	public int getInternalFragmentation() {
+		return internalFragmentation;
 	}
 
 	public List<Page> paginate(SimulatorFile file) {

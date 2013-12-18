@@ -20,6 +20,10 @@ public class Page {
 		this.currentSize = chars.size();
 	}
 	
+	public int getInternalFragmentation() {
+		return size - currentSize;
+	}
+	
 	public int getFileId() {
 		return fileId;
 	}
