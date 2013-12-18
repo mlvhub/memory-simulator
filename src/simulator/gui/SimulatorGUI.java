@@ -251,6 +251,7 @@ public class SimulatorGUI extends JFrame {
 				}
 			};
 			worker.execute();
+			JOptionPane.showMessageDialog(getContentPane(), "Memoria libre "+paginator.getFreeMemory()+" bytes");
 		}
 
 	}
